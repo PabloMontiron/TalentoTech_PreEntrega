@@ -9,11 +9,14 @@ public class Cliente {
     private String fechaNac;
     private int idCliente = 1;
 
+    // Const
     public Cliente() { }
+
     public Cliente(String nombre, int dni, String fechaNac) {
         this.nombreCompleto = nombre;
         this.dni = dni;
         this.fechaNac = fechaNac;
+        this.setIdCliente(idCliente++);
     }
 
     // Get & Set
@@ -56,7 +59,7 @@ public class Cliente {
         System.out.print("Fecha de nacimiento (dd/mm/aaaa): ");
         String fecha = sc.nextLine();
 
-        this.setIdCliente(idCliente++);
+        //this.setIdCliente(idCliente++); mejor en el constructor
         System.out.println("Se ha dado de alta el cliente.");
     }
 }

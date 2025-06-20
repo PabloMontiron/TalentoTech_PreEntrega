@@ -1,5 +1,4 @@
 package com.techlab.pre_entrega;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,7 +8,7 @@ public class Catalogo {
 
     private ArrayList<Producto> lProductosCatalogo;
 
-    private static int cantElementos = 0;
+    private static int cantElementos; // antes = 0;
 
     public Catalogo() {
 
@@ -25,9 +24,6 @@ public class Catalogo {
     // Metodos
     public void agregarProductoAlCatalogo(Producto producto) {
         lProductosCatalogo.add(producto);
-
-        cantElementos++;
-        producto.setIdProducto(cantElementos);
     }
 
     public void subCampoInfusion(String nombre, double precio, int stock) {
@@ -37,8 +33,8 @@ public class Catalogo {
         while (!finWhile) {
             // tipo -> Infusion
             System.out.println("¿Desea añadir el Pais de origen?");
-            System.out.println("1: Añadir pais de origen" + "\n" +
-                    "2: Omitir");
+            System.out.println("1: Añadir pais de origen");
+            System.out.println("2: Omitir");
 
             System.out.print("Respuesta: ");
             int resp = sc.nextInt();
@@ -49,11 +45,11 @@ public class Catalogo {
                 System.out.print("Pais de origen: ");
                 String pais = Utils.formatearString(sc.nextLine());
 
-                Infusion infusion = new Infusion();
+                Infusion infusion = new Infusion(nombre,precio,stock);
 
-                infusion.setNombre(nombre);
-                infusion.setPrecio(precio);
-                infusion.setStock(stock);
+                //infusion.setNombre(nombre);
+                //infusion.setPrecio(precio);
+                //infusion.setStock(stock);
                 infusion.setPaisDeOrigen(pais);
 
                 agregarProductoAlCatalogo(infusion);
@@ -72,13 +68,12 @@ public class Catalogo {
 
         boolean finWhile = false;
         while (!finWhile) {
-
             System.out.print("Peso (puede completar con '----' si no es relevante): ");
             String peso = sc.nextLine();
 
             System.out.println("¿Desea añadir la fecha de vencimiento?");
-            System.out.println("1: Si" + "\n" +
-                    "2: Omitir");
+            System.out.println("1: Si");
+            System.out.println("2: Omitir");
 
             System.out.print("Respuesta: ");
             int resp = sc.nextInt();
@@ -126,33 +121,39 @@ public class Catalogo {
 
         System.out.print("-> Stock inicial: ");
         int stock = sc.nextInt();
+        sc.nextLine();
 
 
         // Desde este punto los campos son especificos del tipo de producto
-        System.out.println("Categorías disponibles: ");
-        System.out.println("----------------------  ");
+        boolean finWhile = false;
 
-        for (int i = 0; i < categorias.length; i++) {
-            System.out.println("Cat: " + (i + 1) + " -> " + categorias[i]);
-        }
+        while (!finWhile) {
+            System.out.println("Categorías disponibles: ");
+            System.out.println("----------------------  ");
 
-        System.out.print("Ingrese numero de categoria del producto: ");
-        int tipoCategoria = sc.nextInt();
-        sc.nextLine();
-
-        if ((tipoCategoria >= 1) && (tipoCategoria <= categorias.length)) {
-
-            if (tipoCategoria == 1) {
-                subCampoInfusion(nombre,precio,stock);
-            } else if (tipoCategoria == 2) {
-                subCampoAlimento(nombre,precio,stock);
+            for (int i = 0; i < categorias.length; i++) {
+                System.out.println("Cat: " + (i + 1) + " -> " + categorias[i]);
             }
 
+            System.out.print("Ingrese numero de categoria del producto: ");
+            int tipoCategoria = sc.nextInt();
+            sc.nextLine();
 
-        } else {
-            System.out.println("Valor fuera de rango. Valores aceptados ( 1 hasta " + categorias.length + " ) ");
+            if ((tipoCategoria >= 1) && (tipoCategoria <= categorias.length)) {
+
+                if (tipoCategoria == 1) {
+                    subCampoInfusion(nombre, precio, stock);
+                    finWhile = true;
+                } else if (tipoCategoria == 2) {
+                    subCampoAlimento(nombre, precio, stock);
+                    finWhile = true;
+                }
+
+            } else {
+                System.out.println("Valor fuera de rango. Valores aceptados ( 1 hasta " + categorias.length + " ) ");
+            }
         }
-
+        // trabajar excepcion, si producto es null o algo deberia decir "Fallo la carga del producto"
         System.out.println("Producto agregado.");
         System.out.println("------------------");
     }
@@ -210,8 +211,8 @@ public class Catalogo {
 
         if (prodSelec != null) {
             System.out.println("Se eliminara el producto: " + prodSelec.getNombre());
-            System.out.println("1: Confirmar" + "\n" +
-                    "2: Cancelar operacion");
+            System.out.println("1: Confirmar");
+            System.out.println("2: Cancelar operacion");
 
             System.out.print("Respuesta: ");
             int resp = sc.nextInt();

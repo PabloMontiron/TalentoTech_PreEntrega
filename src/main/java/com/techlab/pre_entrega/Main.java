@@ -1,6 +1,4 @@
 package com.techlab.pre_entrega;
-
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -32,7 +30,6 @@ public class Main {
         while (!finWhilePrograma) {
             System.out.println("Ingrese una opcion: ");
             System.out.println("------------------- ");
-
             System.out.println("1: Agregar producto");
             System.out.println("2: Listar productos");
             System.out.println("3: Buscar/Actualizar producto");
@@ -71,7 +68,7 @@ public class Main {
                     System.out.println("------------------");
                     System.out.println(catalogo.toString());
                     System.out.println("------------------");
-                    System.out.println("Precione cualquier tecla para continuar.");
+                    System.out.println("Ingrese cualquier tecla para continuar.");
 
                     String fin = sc.nextLine();
                     sc.nextLine();
@@ -152,7 +149,6 @@ public class Main {
                                     System.out.println("No se encontraron productos con esas palabras");
                                 }
 
-
                             } else if (resp == 3) {
                                 finWhile = true;
                                 finWhileBuscar = true;
@@ -160,7 +156,6 @@ public class Main {
                             } else {
                                 System.out.println("Ingrese una opcion válida.");
                             }
-
                         }
                     }
                     break;
@@ -169,22 +164,22 @@ public class Main {
                 case 4:
                     catalogo.eliminarProductoDelCatalogo();
                     break;
-
+                // Crear pedido
                 case 5:
-                    /* -->EN DESARROLLO<--
                     System.out.println("Crear pedido");
                     System.out.println("------------");
                     Cliente cliente = gc.obtenerCliente();
 
                     if (cliente == null) {
-                        System.out.println("No se ha encontrado ningún cliente con esa ID.");
+                        System.out.println("Operación cancelada."); // no olvidar que el met obtenercliente retornara null luego de buscar por id o crear un cliente. null = op cancelada directamente
+                        System.out.println("--------------------");
                     } else {
+                        // aca creo el pedido, si el cliente esta ok se pasa al met crearpedido oalgo asi
+                        Pedido nuevoPedido = new Pedido();
 
+                        nuevoPedido.nuevoPedido(catalogo,cliente);
                     }
-                     // aca ya tengo un cliente
 
-
-                    */
                     break;
                 case 6:
                     // NO INICIADO

@@ -1,20 +1,24 @@
 package com.techlab.pre_entrega;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
 // -->EN DESARROLLO<--
 public class Pedido {
+
     private ArrayList<Producto> lPedido;
-    private int idPedido = 0;
+    private int idPedido ;
     private Cliente cliente;
     private double montoTotal;
-    private static int totalDePedidosRealizados = 0;
 
+    private static int totalDePedidosRealizados;
+
+    // Const
     public Pedido() {
         lPedido = new ArrayList<>();
-        this.setIdPedido(totalDePedidosRealizados); // podria poner -> setIdPedido(toalDePedidosRealizados++) como parte del parametro y evito la linea de abajo
-        totalDePedidosRealizados++; // quizas mejor, incrementa cuando se concreta el pedido
+
+        this.setIdPedido(idPedido++);
+
+        totalDePedidosRealizados++; // luego --> incrementa cuando se concreta el pedido!
     }
 
     // Get & Set
@@ -35,34 +39,60 @@ public class Pedido {
     }
 
     // Metodos
-    /*
-    public void nuevoPedido(Catalogo catalogo; Cliente cliente) {
-        Scanner sc = new Scanner(System.in);
-        boolean continuarPedido = true;
+    public void agregarProductoAlPedido(Producto producto) {
+        lPedido.add(producto);
 
-        // 1ro se asigna un cliente al pedido, sino existe se crea uno nuevo
-        boolean finWhile = false;
-        while ((!finWhile) && (continuarPedido)) {
-
-
-
-
-        }
-
-        // 2do selecciono productos --> se usara el metodo de listar por coincidencia de nombres por cada prod. que se añada para mayor facilidad de busqueda
-        // si el pedido no se cancelo por no asignar cliente
-        if (continuarPedido) {
-            System.out.println("Seleccione producto y cantidad. Se listaran las opciones que coincidan con la busqueda.");
-            System.out.print("Nombre de producto: ");
-            String nomProd = Utils.formatearString(sc.nextLine());
-
-            ArrayList<Producto> lista = como hago para acceder desde Pedido a Catalogo para usar el metodo de buscarpornombre?
-
-            // FALTA DESARROLLAR
-        }
+        System.out.println("Producto agregado.");
+        System.out.println("------------------");
     }
 
-    */
+    public void nuevoPedido(Catalogo catalogo, Cliente cliente) { // de momento es VOID... el main es quien tiene el catalogo, solo encuentro esa forma de conectarlos
+        Scanner sc = new Scanner(System.in);
 
+        System.out.println("Seleccione producto y cantidad. Se listaran las opciones que coincidan con la busqueda.");
+        System.out.println("---------------------------------------------------------------------------------------");
+        System.out.print("Nombre de producto: ");
+        String nomProd = Utils.formatearString(sc.nextLine());
+
+        ArrayList<Producto> resultado =  catalogo.buscarProductoPorNombre(nomProd);
+
+        if (!resultado.isEmpty()) {
+            System.out.println("Resultado de busqueda");
+            System.out.println("---------------------");
+
+            int posProd = 1;
+            for (Producto p : resultado) {
+                System.out.println("Posicion: " + posProd + ", Prod: " + p.getNombre());
+                posProd++;
+            }
+            System.out.println("---- ---- ---- ---- ---- ----");
+
+            System.out.print("Ingrese el número de posición del producto a modificar o 0 'cero' para volver atrás: ");
+            int resp = sc.nextInt();
+            sc.nextLine();
+
+            if ((resp >= 1) && (resp <= resultado.size())) {
+                Producto prodSelec = resultado.get(resp - 1);
+                System.out.println("Seleccionaste el producto: " + prodSelec.getNombre());
+
+                boolean finWhile = false;
+
+                while (!finWhile) {
+                    System.out.println("Ingrese 1 para agregar al pedido o 2 para volver atras.");
+                    resp = sc.nextInt();
+                    sc.nextLine();
+
+                    if (resp == 1) {
+                        agregarProductoAlPedido(prodSelec);
+                        finWhile = true;
+                    } else if (resp != 2) {
+                        System.out.println("Ingrese una opción válida.");
+                    }
+                }
+
+            }
+        }
+
+    }
     // toString
 }

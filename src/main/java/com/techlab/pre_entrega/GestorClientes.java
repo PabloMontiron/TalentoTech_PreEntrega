@@ -54,7 +54,7 @@ public class GestorClientes {
                 int idCliente = sc.nextInt();
                 sc.nextLine();
 
-                Cliente cliente = buscarClientePorId(idCliente);
+                Cliente cliente = buscarClientePorId(idCliente); // ver met
 
                 if (cliente == null) {
                     System.out.println("No se encontro un cliente con ID: " + idCliente);
@@ -69,6 +69,7 @@ public class GestorClientes {
                     if (resp == 2) {
                         System.out.println("Operación canecela.");
                         System.out.println("------------------ ");
+                        // aca cerarria el finwhile que no le veo mucho sentido
                         return null;
                     } else if (resp != 1) {
                         System.out.println("Ingrese una opción válida.");
@@ -81,11 +82,12 @@ public class GestorClientes {
         } else if (resp == 3) {
             System.out.println("Operación cancelada.");
             System.out.println("------------------- ");
-            return null;
+            return null; // si se cancela la operacion Cliente sera null.
         } else {
             System.out.println("Ingrese una opción válida.");
         }
-        return null;
+
+        return null; // en si no deberia llegar a este return...sino lo pongo java lo marca como error.
     }
 
 

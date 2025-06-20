@@ -1,5 +1,4 @@
 package com.techlab.pre_entrega;
-
 import java.util.Scanner;
 
 public abstract class Producto {
@@ -9,14 +8,17 @@ public abstract class Producto {
     private int stock;
     private int categoria; // extra
 
-    private static int contadorProductos = 1;
-    private static int idProducto = 1;
+    private static int contadorProductos = 0;
+    private int idProducto;
+
+    // Const.
     public Producto() {}
 
     public Producto(String nombre, double precio, int stock) {
         this.setNombre(nombre);
         this.setPrecio(precio);
         this.setStock(stock);
+        this.idProducto = ++contadorProductos;
     }
 
     // Get & Set
@@ -70,7 +72,6 @@ public abstract class Producto {
         return contadorProductos;
     }
 
-
     // Metodos
     public void actualizarProducto(Producto producto) {
 
@@ -88,7 +89,7 @@ public abstract class Producto {
             System.out.println("-------------------------");
             System.out.print("Respuesta: ");
             int resp = sc.nextInt();
-            sc.nextLine(); // limpio bufer por salto de linea implicito en nextLine
+            sc.nextLine(); //
 
             if (resp == 1) {
                 String nombreAux = producto.getNombre();
@@ -158,6 +159,7 @@ public abstract class Producto {
         }
     }
 
+    @Override
     public String toString() {
         return  "ID producto: " + this.getIdProducto() + "\n" +
                 this.getNombre() + ", " + this.getPrecio() + " $ " + ", Stock: " + this.getStock();

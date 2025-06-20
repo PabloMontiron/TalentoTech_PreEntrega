@@ -1,0 +1,3 @@
+1_imprimir lista los saltos de linea no son parejos.
+2_modificar stock no vuelve al menu anterior, pasa directamente al menu de seleccion por arriba de el
+3_al ingresar un valor fuera de rango el seleccion de producto por palabras clave no funciona el while en caso de que se ingrese un valor fuera de rango
