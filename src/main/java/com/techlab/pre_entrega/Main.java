@@ -8,6 +8,7 @@ public class Main {
 
         Catalogo catalogo = new Catalogo(); // Instancio un catalogo
         GestorClientes gc = new GestorClientes();
+        GestorPedidos gp = new GestorPedidos();
 
         // --> Instancio algunos productos a modo de facilitar el uso de las funciones del menu <--
         catalogo.agregarProductoAlCatalogo(new Infusion("Cafe en grano",2500,50));
@@ -34,8 +35,8 @@ public class Main {
             System.out.println("2: Listar productos");
             System.out.println("3: Buscar/Actualizar producto");
             System.out.println("4: Eliminar producto");
-            System.out.println("5: Crear pedido // NO FINALIZADO");  // en desarrollo
-            System.out.println("6: Listar pedidos // NO FINALIZADO"); // en desarrollo
+            System.out.println("5: Crear pedido");
+            System.out.println("6: Listar pedidos");
             System.out.println("7: Salir");
 
             System.out.print("Respuesta: ");
@@ -68,7 +69,7 @@ public class Main {
                     System.out.println("------------------");
                     System.out.println(catalogo.toString());
                     System.out.println("------------------");
-                    System.out.println("Ingrese cualquier tecla para continuar.");
+                    System.out.print("Ingrese cualquier tecla para continuar.");
 
                     String fin = sc.nextLine();
                     sc.nextLine();
@@ -91,9 +92,9 @@ public class Main {
 
                         while (!finWhile) {
                             System.out.println("Ingrese una respuesta");
-                            System.out.println("1: Buscar por ID de producto" + "\n" +
-                                    "2: Buscar por palabras clave (Ej: Chocolate Blanco Felfort)" + "\n" +
-                                    "3: Salir al menú anterior");
+                            System.out.println("1: Buscar por ID de producto");
+                            System.out.println("2: Buscar por palabras clave (Ej: Chocolate Blanco Felfort)");
+                            System.out.println("3: Salir al menú anterior");
 
                             System.out.println();
 
@@ -164,6 +165,7 @@ public class Main {
                 case 4:
                     catalogo.eliminarProductoDelCatalogo();
                     break;
+
                 // Crear pedido
                 case 5:
                     System.out.println("Crear pedido");
@@ -174,16 +176,25 @@ public class Main {
                         System.out.println("Operación cancelada."); // no olvidar que el met obtenercliente retornara null luego de buscar por id o crear un cliente. null = op cancelada directamente
                         System.out.println("--------------------");
                     } else {
-                        // aca creo el pedido, si el cliente esta ok se pasa al met crearpedido oalgo asi
-                        Pedido nuevoPedido = new Pedido();
+                        // si existe un cliente se continua con el pedido
+                        Pedido pedido = new Pedido();
 
-                        nuevoPedido.nuevoPedido(catalogo,cliente);
+                        pedido.nuevoPedido(catalogo,cliente,gp);
                     }
 
                     break;
                 case 6:
-                    // NO INICIADO
+                    // Listar pedidos
+                    System.out.println("Lista de prdidos");
+                    System.out.println("------------------");
+                    System.out.println(gp.toString());
+                    System.out.println("------------------");
+                    System.out.print("Ingrese cualquier tecla para continuar.");
+
+                    fin = sc.nextLine();
+                    sc.nextLine();
                     break;
+
                 case 7:
                     finWhilePrograma = true;
                     System.out.println("Fin del Programa.");
