@@ -173,7 +173,7 @@ public class Main {
                     Cliente cliente = gc.obtenerCliente();
 
                     if (cliente == null) {
-                        System.out.println("Operación cancelada."); // no olvidar que el met obtenercliente retornara null luego de buscar por id o crear un cliente. null = op cancelada directamente
+                        System.out.println("Operación cancelada."); // no olvidar que el met obtenerCliente retornara null luego de buscar por id o crear un cliente. null = op cancelada directamente
                         System.out.println("--------------------");
                     } else {
                         // si existe un cliente se continua con el pedido
@@ -186,9 +186,7 @@ public class Main {
                 case 6:
                     // Listar pedidos
                     System.out.println("Lista de prdidos");
-                    System.out.println("------------------");
                     System.out.println(gp.toString());
-                    System.out.println("------------------");
                     System.out.print("Ingrese cualquier tecla para continuar.");
 
                     fin = sc.nextLine();

@@ -16,22 +16,20 @@ public class GestorPedidos {
         lPedidos.add(pedido);
     }
 
-    //
+    @Override
     public String toString() {
         String aux = "";
 
         if (!lPedidos.isEmpty()) {
             for (Pedido p : lPedidos) {
-
-                aux += "ID Pedido: " + p.getIdPedido() + "\n";
-
                 aux += p.toString();
+                aux +=("----------------\n");
             }
-            System.out.println("----------------------------");
+
             return aux;
 
         } else {
-            return "No hay pedidos aún";
+            return "No hay pedidos aún \n";
         }
     }
 

@@ -1,23 +1,24 @@
 package com.techlab.pre_entrega;
-
 import java.util.Scanner;
 
-// -->EN DESARROLLO<--
+
 public class Cliente {
     private String nombreCompleto;
     private int dni;
     private String fechaNac;
-    private int idCliente = 1;
+    private int idCliente;
+    private static int contador = 1;
 
     // Const
     public Cliente() { }
 
+    /*
     public Cliente(String nombre, int dni, String fechaNac) {
         this.nombreCompleto = nombre;
         this.dni = dni;
         this.fechaNac = fechaNac;
-        this.setIdCliente(idCliente++);
     }
+    */
 
     // Get & Set
     public int getIdCliente() {
@@ -55,11 +56,18 @@ public class Cliente {
 
         System.out.print("DNI: ");
         int dni = sc.nextInt();
+        sc.nextLine();
 
         System.out.print("Fecha de nacimiento (dd/mm/aaaa): ");
         String fecha = sc.nextLine();
 
-        //this.setIdCliente(idCliente++); mejor en el constructor
+        this.setNombreCompleto(nomYApe);
+        this.setDni(dni);
+        this.setFechaNac(fecha);
+
+        this.setIdCliente(contador);
+        contador++;
+
         System.out.println("Se ha dado de alta el cliente.");
     }
 }

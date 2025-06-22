@@ -131,16 +131,18 @@ public class Pedido {
         }
     }
 
+    @Override
     public String toString() {
         String aux = "";
 
-        if (!lProductos.isEmpty()) {
-            System.out.println("Detalles del cliente:");
-            System.out.println("---------------------");
-            aux += cliente.getIdCliente();
-            aux += cliente.getNombreCompleto() +  "\n";
+        aux += "ID Pedido: " + this.getIdPedido() + "\n";
 
-            System.out.println("Detalles del pedido:");
+        if (cliente != null) {
+            aux += cliente.getNombreCompleto() + "\n";
+        }
+
+        if (!lProductos.isEmpty()) {
+            aux += "Detalles del pedido: \n";
             System.out.println("--------------------");
             for (Producto p : lProductos) {
                 aux += p.getNombre() +  "\n";
@@ -149,10 +151,10 @@ public class Pedido {
             }
             aux += "Total a abonar: ---- $ " + "\n";
 
-            return aux;
         } else {
-            return "No hay ningún producto en la lista";
+            return "No hay ningún producto en este pedido.\n";
         }
+        return aux;
     }
 
 }
