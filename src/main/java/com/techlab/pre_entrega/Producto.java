@@ -1,4 +1,6 @@
 package com.techlab.pre_entrega;
+import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+
 import java.util.Scanner;
 
 public abstract class Producto {
@@ -14,7 +16,9 @@ public abstract class Producto {
     // Const.
     public Producto() {}
 
-    public Producto(String nombre, double precio, int stock) {
+    // ahora hay que manjear esos errores con try catch etc...
+    public Producto(String nombre, double precio, int stock)
+        throws PrecioInvalidoException {
         this.setNombre(nombre);
         this.setPrecio(precio);
         this.setStock(stock);
@@ -22,9 +26,7 @@ public abstract class Producto {
     }
 
     // Get & Set
-
-    // EL MEOTODO PUEDE LANZAR UNA EXCEPCION Y LUEGO QUIEN LO INVOQUE DEBERIA MANEJARLA ... ??
-    public void setNombre(String nombre) { // aca podria derivar una excepcion y que el que lo invoque use try catch
+    public void setNombre(String nombre) {
         if (!nombre.isEmpty()) {
             this.nombre = nombre;
         } else {
@@ -32,12 +34,11 @@ public abstract class Producto {
         }
     }
 
-    public void setPrecio(double precio) {
-        if (precio > 0) {
-            this.precio = precio;
-        } else {
-            System.out.println("El valor debe ser mayor a cero.");
+    public void setPrecio(double precio) throws PrecioInvalidoException {
+        if (precio <= 0) {
+            throw new PrecioInvalidoException("El precio debe ser mayor a cero.");
         }
+        this.precio = precio;
     }
 
     public void  setStock(int stock) {
@@ -114,12 +115,20 @@ public abstract class Producto {
                 System.out.println("Precio actual: " + producto.getPrecio() + " $ ");
                 System.out.println("------------------");
 
-                System.out.print("Ingrese nuevo precio: ");
-                double nuevoPrecio = sc.nextDouble();
+                boolean precioOk = false;
+                while (!precioOk) {
+                    try {
+                        System.out.print("Ingrese nuevo precio: ");
+                        double nuevoPrecio = sc.nextDouble();
 
-                producto.setPrecio(nuevoPrecio); // ver excepciones...
-                System.out.println("El precio del producto " + producto.getNombre() + ", se ha actualizado correctamente a : " + nuevoPrecio + " $ ");
-                System.out.println("---- ---- ---- ---- ---- ---- ---- ---- ----");
+                        producto.setPrecio(nuevoPrecio);
+                        System.out.println("El precio del producto " + producto.getNombre() + ", se ha actualizado correctamente a : " + nuevoPrecio + " $ ");
+                        System.out.println("--------------------");
+                        precioOk = true;
+                    } catch (PrecioInvalidoException e) {
+                        System.out.println("Error al actualizr precio: " + e.getMessage());
+                    }
+                }
 
             } else if (resp == 3) {
                 System.out.println("Actualizar Stock");

@@ -1,4 +1,6 @@
 package com.techlab.pre_entrega;
+import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -45,18 +47,23 @@ public class Catalogo {
                 System.out.print("Pais de origen: ");
                 String pais = Utils.formatearString(sc.nextLine());
 
-                Infusion infusion = new Infusion(nombre,precio,stock);
+                try {
+                    Infusion infusion = new Infusion(nombre, precio, stock);
+                    infusion.setPaisDeOrigen(pais);
+                    agregarProductoAlCatalogo(infusion);
+                } catch (PrecioInvalidoException e) {
+                    System.out.println("No se pudo agregar el producto." + e.getMessage());
+                }
 
-                //infusion.setNombre(nombre);
-                //infusion.setPrecio(precio);
-                //infusion.setStock(stock);
-                infusion.setPaisDeOrigen(pais);
-
-                agregarProductoAlCatalogo(infusion);
             } else if (resp == 2) {
                 finWhile = true;
-                Infusion infusion = new Infusion(nombre,precio,stock);
-                agregarProductoAlCatalogo(infusion);
+                try {
+                    Infusion infusion = new Infusion(nombre, precio, stock);
+                    agregarProductoAlCatalogo(infusion);
+                } catch (PrecioInvalidoException e) {
+                    System.out.println("No se puedo agregar el producto." + e.getMessage());
+                }
+
             } else {
                 System.out.println("Ingrese una opción válida.");
             }
@@ -84,13 +91,24 @@ public class Catalogo {
                 System.out.print("Fecha de vencimiento (dd/mm/aaaa): ");
                 String vencimiento = sc.nextLine();
 
-                Alimento alimento = new Alimento(nombre,precio,stock,peso,vencimiento);
+                try {
+                    Alimento alimento = new Alimento(nombre,precio,stock,peso,vencimiento);
+                    agregarProductoAlCatalogo(alimento);
+                } catch (PrecioInvalidoException e) {
+                    System.out.println("No se puedo agregar el producto.\" + e.getMessage()");
+                }
 
-                agregarProductoAlCatalogo(alimento);
+
             } else if (resp == 2) {
                 finWhile = true;
-                Alimento alimento = new Alimento(nombre,precio,stock,peso);
-                agregarProductoAlCatalogo(alimento);
+
+                 try {
+                     Alimento alimento = new Alimento(nombre,precio,stock,peso);
+                     agregarProductoAlCatalogo(alimento);
+                 } catch (PrecioInvalidoException e) {
+                     System.out.println("No se puedo agregar el producto." + e.getMessage());
+                 }
+
             } else {
                 System.out.println("Ingrese una opción válida.");
             }

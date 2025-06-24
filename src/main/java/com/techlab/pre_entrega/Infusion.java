@@ -1,16 +1,20 @@
 package com.techlab.pre_entrega;
 
+import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+
 public class Infusion extends Producto {
 
     private String paisDeOrigen;
 
     //public Infusion() {}
 
-    public Infusion(String nombre, double precio, int stock) {
+    public Infusion(String nombre, double precio, int stock)
+        throws PrecioInvalidoException {
         super(nombre,precio,stock);
     }
 
-    public Infusion(String nombre, double precio, int stock, String paisDeOrigen) {
+    public Infusion(String nombre, double precio, int stock, String paisDeOrigen)
+        throws PrecioInvalidoException {
         super(nombre,precio,stock);
         this.paisDeOrigen = paisDeOrigen;
     }

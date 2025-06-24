@@ -52,7 +52,7 @@ public class Cliente {
 
         System.out.println("Ingrese los siguientes datos: ");
         System.out.print("Nombre Completo: ");
-        String nomYApe = sc.nextLine();
+        String nomYApe = Utils.formatearString(sc.nextLine());
 
         System.out.print("DNI: ");
         int dni = sc.nextInt();

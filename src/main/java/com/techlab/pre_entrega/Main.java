@@ -1,4 +1,6 @@
 package com.techlab.pre_entrega;
+import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -6,20 +8,24 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        Catalogo catalogo = new Catalogo(); // Instancio un catalogo
+        Catalogo catalogo = new Catalogo();
         GestorClientes gc = new GestorClientes();
         GestorPedidos gp = new GestorPedidos();
 
         // --> Instancio algunos productos a modo de facilitar el uso de las funciones del menu <--
-        catalogo.agregarProductoAlCatalogo(new Infusion("Cafe en grano",2500,50));
-        catalogo.agregarProductoAlCatalogo(new Infusion("Te de Jazmin",3500,30));
-        catalogo.agregarProductoAlCatalogo(new Alimento("Galletitas FreeGult",5000,20,"500 gr","17/06/2026"));
-        catalogo.agregarProductoAlCatalogo(new Alimento("Galletitas GoldGult",5000,20,"200 gr","17/06/2026"));
-        catalogo.agregarProductoAlCatalogo(new Alimento("Chocotorta ChumpCrock",3800,17,"300 gr","25/05/2026"));
-        catalogo.agregarProductoAlCatalogo(new Infusion("Yerba Mate La Tranquera",2200,10));
+        try {
+            catalogo.agregarProductoAlCatalogo(new Infusion("Cafe en grano", 2500, 50));
+            catalogo.agregarProductoAlCatalogo(new Infusion("Te de Jazmin", 3500, 30));
+            catalogo.agregarProductoAlCatalogo(new Alimento("Galletitas FreeGult", 5000, 20, "500 gr", "17/06/2026"));
+            catalogo.agregarProductoAlCatalogo(new Alimento("Galletitas GoldGult", 5000, 20, "200 gr", "17/06/2026"));
+            catalogo.agregarProductoAlCatalogo(new Alimento("Chocotorta ChumpCrock", 3800, 17, "300 gr", "25/05/2026"));
+            catalogo.agregarProductoAlCatalogo(new Infusion("Yerba Mate La Tranquera", 2200, 10));
+        } catch (PrecioInvalidoException e) {
+            System.out.println("Error al cargar productos precargados.");
+        }
         // -- --
 
-        // Modularizar toda esta seccion del manejo del menu
+        // --> se puede mejorar la modularizacion.
         boolean finWhilePrograma = false;
 
         Scanner sc = new Scanner(System.in);
@@ -49,8 +55,8 @@ public class Main {
                     while (!finWhileProducto) {
                         catalogo.agregarProducto();
 
-                        System.out.println("1: Agregar otro producto" + "\n" +
-                                "2: Volver al menu principal");
+                        System.out.println("1: Agregar otro producto");
+                        System.out.println("2: Volver al menu principal");
 
                         System.out.print("Respuesta: ");
                         resp = sc.nextInt();
@@ -132,7 +138,7 @@ public class Main {
                                         System.out.println("Posición: " + posProd + " : " + p.getNombre());
                                         posProd++;
                                     }
-                                    System.out.println("---- ---- ---- ---- ---- ----");
+                                    System.out.println("---- ---- ---- ---- ----");
                                     System.out.print("Ingrese el número de posición del producto a modificar o 0 'cero' para volver atrás: ");
                                     resp = sc.nextInt();
                                     sc.nextLine();
@@ -190,7 +196,6 @@ public class Main {
                     System.out.print("Ingrese cualquier tecla para continuar.");
 
                     fin = sc.nextLine();
-                    sc.nextLine();
                     break;
 
                 case 7:

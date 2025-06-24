@@ -1,17 +1,21 @@
 package com.techlab.pre_entrega;
 
+import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+
 public class Alimento extends Producto {
 
     String peso;
     String fechaVencimiento;
 
     // Const.
-    public Alimento(String nombre, double precio, int stock, String peso) {
+    public Alimento(String nombre, double precio, int stock, String peso)
+        throws PrecioInvalidoException {
         super(nombre,precio,stock);
         this.peso = peso;
     }
 
-    public Alimento(String nombre, double precio, int stock, String peso, String fechaVencimiento) {
+    public Alimento(String nombre, double precio, int stock, String peso, String fechaVencimiento)
+        throws PrecioInvalidoException {
         super(nombre,precio,stock);
         this.peso = peso;
         this.fechaVencimiento = fechaVencimiento;

@@ -143,7 +143,7 @@ public class Pedido {
 
         if (!lProductos.isEmpty()) {
             aux += "Detalles del pedido: \n";
-            System.out.println("--------------------");
+            aux += "x------------------x\n";
             for (Producto p : lProductos) {
                 aux += p.getNombre() +  "\n";
                 aux += p.getPrecio() + " $ " +  "\n";
