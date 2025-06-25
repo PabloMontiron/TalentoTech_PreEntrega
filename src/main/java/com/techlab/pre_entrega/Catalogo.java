@@ -1,5 +1,7 @@
 package com.techlab.pre_entrega;
+import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -43,15 +45,24 @@ public class Catalogo {
             sc.nextLine();
 
             if (resp == 1) {
-                finWhile = true;
-                System.out.print("Pais de origen: ");
-                String pais = Utils.formatearString(sc.nextLine());
-
+                String pais = "";
+                boolean cadenaOk = false;
+                while (!cadenaOk) {
+                    try {
+                        System.out.print("Pais de origen: ");
+                        pais = Utils.formatearString(sc.nextLine());
+                        Utils.validarCadena(pais);
+                        finWhile = true;
+                        cadenaOk = true;
+                    } catch (CadenaInvalidaException e) {
+                        System.out.println("No se registro ningún dato.");
+                    }
+                }
                 try {
                     Infusion infusion = new Infusion(nombre, precio, stock);
                     infusion.setPaisDeOrigen(pais);
                     agregarProductoAlCatalogo(infusion);
-                } catch (PrecioInvalidoException e) {
+                } catch (PrecioInvalidoException | StockInvalidoException | CadenaInvalidaException e) {
                     System.out.println("No se pudo agregar el producto." + e.getMessage());
                 }
 
@@ -60,10 +71,9 @@ public class Catalogo {
                 try {
                     Infusion infusion = new Infusion(nombre, precio, stock);
                     agregarProductoAlCatalogo(infusion);
-                } catch (PrecioInvalidoException e) {
+                } catch (PrecioInvalidoException | StockInvalidoException | CadenaInvalidaException e) {
                     System.out.println("No se puedo agregar el producto." + e.getMessage());
                 }
-
             } else {
                 System.out.println("Ingrese una opción válida.");
             }
@@ -75,8 +85,19 @@ public class Catalogo {
 
         boolean finWhile = false;
         while (!finWhile) {
-            System.out.print("Peso (puede completar con '----' si no es relevante): ");
-            String peso = sc.nextLine();
+            String peso = "";
+            boolean pesoOk = false;
+            while (!pesoOk) {
+                try {
+                    System.out.print("Peso (puede completar con '----' si no es relevante): ");
+                    peso = sc.nextLine();
+                    Utils.validarCadena(peso);
+                    pesoOk = true;
+
+                } catch (CadenaInvalidaException e) {
+                    System.out.println("No se registro ningún dato.");
+                }
+            }
 
             System.out.println("¿Desea añadir la fecha de vencimiento?");
             System.out.println("1: Si");
@@ -87,14 +108,23 @@ public class Catalogo {
             sc.nextLine();
 
             if (resp == 1) {
-                finWhile = true;
-                System.out.print("Fecha de vencimiento (dd/mm/aaaa): ");
-                String vencimiento = sc.nextLine();
-
+                String vencimiento = "";
+                boolean fechaOk = false;
+                while (!fechaOk) {
+                    try {
+                        System.out.print("Fecha de vencimiento (dd/mm/aaaa): ");
+                        vencimiento = sc.nextLine();
+                        Utils.validarCadena(vencimiento);
+                        finWhile = true;
+                        fechaOk = true;
+                    } catch (CadenaInvalidaException e) {
+                        System.out.println("No se registro ningún dato.");
+                    }
+                }
                 try {
                     Alimento alimento = new Alimento(nombre,precio,stock,peso,vencimiento);
                     agregarProductoAlCatalogo(alimento);
-                } catch (PrecioInvalidoException e) {
+                } catch (PrecioInvalidoException | StockInvalidoException | CadenaInvalidaException e) {
                     System.out.println("No se puedo agregar el producto.\" + e.getMessage()");
                 }
 
@@ -105,7 +135,7 @@ public class Catalogo {
                  try {
                      Alimento alimento = new Alimento(nombre,precio,stock,peso);
                      agregarProductoAlCatalogo(alimento);
-                 } catch (PrecioInvalidoException e) {
+                 } catch (PrecioInvalidoException | StockInvalidoException | CadenaInvalidaException e) {
                      System.out.println("No se puedo agregar el producto." + e.getMessage());
                  }
 
@@ -118,9 +148,8 @@ public class Catalogo {
 
     public void agregarProducto() {
 
-        Scanner sc = new Scanner(System.in); // esta bien instanciarlos "por separado si es que se usa en un metodo?
+        Scanner sc = new Scanner(System.in);
 
-        // Agregar producto
         System.out.println("Cantidad actual de productos en el catálogo: " + Producto.getContadorProductos());
         System.out.println("-------------------------------------------  ");
 
@@ -130,17 +159,46 @@ public class Catalogo {
         System.out.println("Ingrese los siguientes datos del producto a agregar: ");
         System.out.println("---------------------------------------------------- ");
 
-        System.out.print("-> Nombre de venta: ");
-        String nombre = Utils.formatearString(sc.nextLine());
+        String nombre = "";
+        boolean nombreOk = false;
+        while (!nombreOk) {
+            try {
+                System.out.print("-> Nombre de venta: ");
+                nombre = Utils.formatearString(sc.nextLine());
+                Utils.validarCadena(nombre);
+                nombreOk = true;
+            } catch (CadenaInvalidaException e) {
+                System.out.println("No se registro nigún dato.");
+            }
+        }
 
-        System.out.print("-> Precio: ");
-        double precio = sc.nextDouble();
-        sc.nextLine();
+        double precio = 0;
+        boolean precioValido = false;
+        while (!precioValido) {
+            try {
+                System.out.print("-> Precio: ");
+                precio = sc.nextDouble();
+                sc.nextLine();
+                Utils.validarPrecio(precio);
+                precioValido = true;
+            } catch (PrecioInvalidoException e) {
+                System.out.println("Precio inválido: " + e.getMessage());
+            }
+        }
 
-        System.out.print("-> Stock inicial: ");
-        int stock = sc.nextInt();
-        sc.nextLine();
-
+        int stock = 0;
+        boolean stockOk = false;
+        while (!stockOk) {
+            try {
+                System.out.print("-> Stock inicial: ");
+                stock = sc.nextInt();
+                Utils.validarStock(stock);
+                sc.nextLine();
+                stockOk = true;
+            } catch (StockInvalidoException e) {
+                System.out.println("Stock inválido: " + e.getMessage());
+            }
+        }
 
         // Desde este punto los campos son especificos del tipo de producto
         boolean finWhile = false;

@@ -1,6 +1,8 @@
 package com.techlab.pre_entrega;
 
+import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 
 public class Infusion extends Producto {
 
@@ -9,12 +11,12 @@ public class Infusion extends Producto {
     //public Infusion() {}
 
     public Infusion(String nombre, double precio, int stock)
-        throws PrecioInvalidoException {
+        throws PrecioInvalidoException, StockInvalidoException, CadenaInvalidaException {
         super(nombre,precio,stock);
     }
 
     public Infusion(String nombre, double precio, int stock, String paisDeOrigen)
-        throws PrecioInvalidoException {
+        throws PrecioInvalidoException, StockInvalidoException, CadenaInvalidaException {
         super(nombre,precio,stock);
         this.paisDeOrigen = paisDeOrigen;
     }
@@ -37,7 +39,7 @@ public class Infusion extends Producto {
             aux += "Pais de origen: " + this.getPaisDeOrigen();
         } else {
             this.setPaisDeOrigen("----");
-            aux += "Pais de origen: " + this.getPaisDeOrigen(); // QUIZAS NO USAR UN GETTER SINO "Pasis de origen: ---- "; ASI NO MAS A MANO..??
+            aux += "Pais de origen: " + this.getPaisDeOrigen();
         }
         return aux;
     }

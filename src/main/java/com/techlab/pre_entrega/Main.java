@@ -1,13 +1,12 @@
 package com.techlab.pre_entrega;
+import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
-
+import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// -->FALTAN TRABAJAR TODAS LAS EXCEPCIONES Y TERMINAR DE DESARROLLAR LA GETION DE PEDIDOS<--
 public class Main {
     public static void main(String[] args) {
-
         Catalogo catalogo = new Catalogo();
         GestorClientes gc = new GestorClientes();
         GestorPedidos gp = new GestorPedidos();
@@ -20,8 +19,8 @@ public class Main {
             catalogo.agregarProductoAlCatalogo(new Alimento("Galletitas GoldGult", 5000, 20, "200 gr", "17/06/2026"));
             catalogo.agregarProductoAlCatalogo(new Alimento("Chocotorta ChumpCrock", 3800, 17, "300 gr", "25/05/2026"));
             catalogo.agregarProductoAlCatalogo(new Infusion("Yerba Mate La Tranquera", 2200, 10));
-        } catch (PrecioInvalidoException e) {
-            System.out.println("Error al cargar productos precargados.");
+        } catch (PrecioInvalidoException | StockInvalidoException | CadenaInvalidaException e) {
+            System.out.println("Error al cargar los productos.");
         }
         // -- --
 

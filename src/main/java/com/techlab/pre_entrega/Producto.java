@@ -1,5 +1,7 @@
 package com.techlab.pre_entrega;
+import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 
 import java.util.Scanner;
 
@@ -14,11 +16,11 @@ public abstract class Producto {
     private int idProducto;
 
     // Const.
-    public Producto() {}
+    //public Producto() {}
 
     // ahora hay que manjear esos errores con try catch etc...
     public Producto(String nombre, double precio, int stock)
-        throws PrecioInvalidoException {
+        throws PrecioInvalidoException, StockInvalidoException, CadenaInvalidaException {
         this.setNombre(nombre);
         this.setPrecio(precio);
         this.setStock(stock);
@@ -26,12 +28,11 @@ public abstract class Producto {
     }
 
     // Get & Set
-    public void setNombre(String nombre) {
-        if (!nombre.isEmpty()) {
-            this.nombre = nombre;
-        } else {
-            System.out.println("Campo vacío. Debe asignar un nombre");
+    public void setNombre(String nombre) throws CadenaInvalidaException {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new CadenaInvalidaException("No se registro nigún dato.");
         }
+        this.nombre = nombre;
     }
 
     public void setPrecio(double precio) throws PrecioInvalidoException {
@@ -41,12 +42,11 @@ public abstract class Producto {
         this.precio = precio;
     }
 
-    public void  setStock(int stock) {
-        if (stock > 0) {
-            this.stock = stock;
-        } else {
-            System.out.println("El valor debe ser mayor a cero.");
+    public void  setStock(int stock) throws StockInvalidoException {
+        if (stock < 0) {
+            throw new StockInvalidoException("El stock debe ser igual o mayor a 0.");
         }
+        this.stock = stock;
     }
 
     public String getNombre() {
@@ -65,21 +65,14 @@ public abstract class Producto {
         return this.idProducto;
     }
 
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
-    }
-
     public static int getContadorProductos() {
         return contadorProductos;
     }
 
     // Metodos
     public void actualizarProducto(Producto producto) {
-
         Scanner sc = new Scanner(System.in);
-
         boolean finWhile = false;
-
         while (!finWhile) {
             System.out.println("Seleccione el número de campo a atualizar");
             System.out.println("-------------------------");
@@ -102,10 +95,18 @@ public abstract class Producto {
                 System.out.println();
                 System.out.println("-----------------------------");
 
-                System.out.print("Ingrese nuevo nombre completo de producto: ");
-
-                String nuevoNom = Utils.formatearString(sc.nextLine());
-                producto.setNombre(nuevoNom); // ver excepciones...
+                String nuevoNom = "";
+                boolean nombreOk = false;
+                while (!nombreOk) {
+                    try {
+                        System.out.print("Ingrese nuevo nombre completo de producto: ");
+                        nuevoNom = Utils.formatearString(sc.nextLine());
+                        producto.setNombre(nuevoNom);
+                        nombreOk = true;
+                    } catch (CadenaInvalidaException e) {
+                        System.out.println("Error al actualizar el nombre: " + e.getMessage());
+                    }
+                }
 
                 System.out.println("El producto " + nombreAux + ", se ha actualizado correctamente a : " + nuevoNom);
                 System.out.println("---- ---- ---- ---- ---- ---- ---- ---- ----");
@@ -136,9 +137,19 @@ public abstract class Producto {
                 int stockAux = producto.getStock();
                 System.out.println("Stock actual: " + producto.getStock());
 
-                System.out.print("Ingrese nuevo Stock: ");
-                int nuevoStock = sc.nextInt();
-                sc.nextLine();
+                int nuevoStock = 0;
+                boolean stockOk = false;
+                while (!stockOk) {
+                    try {
+                        System.out.print("Ingrese nuevo Stock: ");
+                        nuevoStock = sc.nextInt();
+                        sc.nextLine();
+                        Utils.validarStock(nuevoStock);
+                        stockOk = true;
+                    } catch (StockInvalidoException e) {
+                        System.out.println("El stock debe ser igual o mayor a 0.");
+                    }
+                }
 
                 System.out.println("El Stock pasará de: " + stockAux + ", a : " + nuevoStock);
                 System.out.println("1: Confirmar");
@@ -149,7 +160,11 @@ public abstract class Producto {
 
                 if (resp == 1) {
                     finWhile = true;
-                    producto.setStock(nuevoStock); // ver excepciones...
+                    try {
+                        producto.setStock(nuevoStock);
+                    } catch (Exception e) {
+                        System.out.println("El stock debe ser igual o mayor a 0.");
+                    }
                     System.out.println("El Stock del producto " + producto.getNombre() + ", se ha actualizado correctamente a : " + nuevoStock + " unidades.");
                     System.out.println("---- ---- ---- ---- ---- ---- ---- ---- ----");
                 } else if (resp == 2) {

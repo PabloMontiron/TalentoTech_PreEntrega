@@ -1,6 +1,8 @@
 package com.techlab.pre_entrega;
 
+import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
+import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 
 public class Alimento extends Producto {
 
@@ -9,20 +11,21 @@ public class Alimento extends Producto {
 
     // Const.
     public Alimento(String nombre, double precio, int stock, String peso)
-        throws PrecioInvalidoException {
+        throws PrecioInvalidoException, StockInvalidoException, CadenaInvalidaException {
         super(nombre,precio,stock);
         this.peso = peso;
     }
 
     public Alimento(String nombre, double precio, int stock, String peso, String fechaVencimiento)
-        throws PrecioInvalidoException {
+        throws PrecioInvalidoException, StockInvalidoException, CadenaInvalidaException {
         super(nombre,precio,stock);
         this.peso = peso;
         this.fechaVencimiento = fechaVencimiento;
     }
 
     // Get & Set
-    public void setPeso(String peso) {
+    public void setPeso(String peso) throws CadenaInvalidaException {
+        Utils.validarCadena(peso);
         this.peso = peso;
     }
 
@@ -34,7 +37,8 @@ public class Alimento extends Producto {
         return fechaVencimiento;
     }
 
-    public void setFechaVencimiento(String fechaVencimiento) {
+    public void setFechaVencimiento(String fechaVencimiento) throws CadenaInvalidaException{
+        Utils.validarCadena(fechaVencimiento);
         this.fechaVencimiento = fechaVencimiento;
     }
 
@@ -47,10 +51,13 @@ public class Alimento extends Producto {
         if (this.getFechaVencimiento() != null) {
             aux += "Fecha de vencimiento: " + this.getFechaVencimiento() + "\n";
         } else {
-            this.setFechaVencimiento("----");
-            aux += "Pais de origen: " + this.getFechaVencimiento() + "\n"; // QUIZAS NO USAR UN GETTER SINO "Pasis de origen: ---- "; ASI NO MAS A MANO..??
+            try {
+                this.setFechaVencimiento("----");
+                aux += "Pais de origen: " + this.getFechaVencimiento() + "\n";
+            } catch (CadenaInvalidaException e) {
+                System.out.println("No se registro ningún dato.");
+            }
         }
-
         return aux;
     }
 }
