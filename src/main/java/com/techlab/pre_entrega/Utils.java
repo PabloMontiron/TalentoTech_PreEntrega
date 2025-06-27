@@ -1,6 +1,7 @@
 package com.techlab.pre_entrega;
 
 import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
+import com.techlab.pre_entrega.excepciones.DniInvalidoException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
 import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 
@@ -42,6 +43,12 @@ public class Utils {
     public static void validarCadena(String cadena) throws CadenaInvalidaException {
         if (cadena == null || cadena.trim().isEmpty()) {
             throw new CadenaInvalidaException("No se registro ningún dato.");
+        }
+    }
+
+    public static void validarDni(int dni) throws DniInvalidoException {
+        if (dni < 0) {
+            throw new DniInvalidoException("El DNI debe ser un número entero positivo.");
         }
     }
 }

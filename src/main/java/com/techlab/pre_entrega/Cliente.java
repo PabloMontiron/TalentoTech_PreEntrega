@@ -1,4 +1,7 @@
 package com.techlab.pre_entrega;
+import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
+import com.techlab.pre_entrega.excepciones.DniInvalidoException;
+
 import java.util.Scanner;
 
 
@@ -30,19 +33,29 @@ public class Cliente {
     public int getDni() {
         return dni;
     }
-    public void setDni(int dni) {
-        this.dni = dni;
+    public String getFechaNac() {
+        return fechaNac;
     }
     public String getNombreCompleto() {
         return nombreCompleto;
     }
-    public void setNombreCompleto(String nombreCompleto) {
+
+    public void setDni(int dni) throws DniInvalidoException {
+        if (dni < 0) {
+            throw new DniInvalidoException("El DNI debe ser un número positivo entero.");
+        }
+        this.dni = dni;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) throws CadenaInvalidaException{
+        if (nombreCompleto == null || nombreCompleto.trim().isEmpty()) {
+            throw new CadenaInvalidaException("No se registro nigún dato.");
+        }
         this.nombreCompleto = nombreCompleto;
     }
-    public String getFechaNac() {
-        return fechaNac;
-    }
-    public void setFechaNac(String fechaNac) {
+
+    public void setFechaNac(String fechaNac) throws CadenaInvalidaException {
+        Utils.validarCadena(fechaNac);
         this.fechaNac = fechaNac;
     }
 
@@ -51,19 +64,68 @@ public class Cliente {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Ingrese los siguientes datos: ");
-        System.out.print("Nombre Completo: ");
-        String nomYApe = Utils.formatearString(sc.nextLine());
 
-        System.out.print("DNI: ");
-        int dni = sc.nextInt();
-        sc.nextLine();
+        String nomYApe = "";
+        boolean nombreOk = false;
+        while (!nombreOk) {
+            try {
+                System.out.print("Nombre Completo: ");
+                nomYApe = Utils.formatearString(sc.nextLine());
+                Utils.validarCadena(nomYApe);
+                nombreOk = true;
+            } catch (CadenaInvalidaException e) {
+                System.out.println("No se registro nigún dato.");
+                sc.nextLine();
+            }
+        }
 
-        System.out.print("Fecha de nacimiento (dd/mm/aaaa): ");
-        String fecha = sc.nextLine();
+        int dni = 0;
+        boolean dniOk = false;
+        while (!dniOk) {
+            try {
+                System.out.print("DNI: ");
+                dni = sc.nextInt();
+                sc.nextLine();
+                Utils.validarDni(dni);
+                dniOk = true;
+            } catch (DniInvalidoException e) {
+                System.out.println("El DNI debe ser un número entero positivo.");
+                sc.nextLine();
+            }
 
-        this.setNombreCompleto(nomYApe);
-        this.setDni(dni);
-        this.setFechaNac(fecha);
+        }
+
+        String fecha = "";
+        boolean fechaOk = false;
+        while (!fechaOk) {
+            try {
+                System.out.print("Fecha de nacimiento (dd/mm/aaaa): ");
+                fecha = sc.nextLine();
+                Utils.validarCadena(fecha);
+                fechaOk = true;
+            } catch (CadenaInvalidaException e) {
+                System.out.println("No se registro nigún dato.");
+                sc.nextLine();
+            }
+        }
+
+        try {
+            this.setNombreCompleto(nomYApe);
+        } catch (CadenaInvalidaException e) {
+            System.out.println("No se registro nigún dato.");
+        }
+
+        try {
+            this.setDni(dni);
+        } catch (DniInvalidoException e) {
+            System.out.println("El DNI debe ser un número positivo entero.");
+        }
+
+        try {
+            this.setFechaNac(fecha);
+        } catch (CadenaInvalidaException e) {
+            System.out.println("No se registro nigún dato.");
+        }
 
         this.setIdCliente(contador);
         contador++;

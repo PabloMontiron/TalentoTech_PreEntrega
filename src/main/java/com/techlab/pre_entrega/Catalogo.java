@@ -4,6 +4,7 @@ import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
 import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Catalogo {
@@ -36,13 +37,24 @@ public class Catalogo {
         boolean finWhile = false;
         while (!finWhile) {
             // tipo -> Infusion
-            System.out.println("¿Desea añadir el Pais de origen?");
-            System.out.println("1: Añadir pais de origen");
-            System.out.println("2: Omitir");
+            int resp = 0;
+            boolean respOk = false;
+            while (!respOk) {
+                try {
+                    System.out.println("¿Desea añadir el Pais de origen?");
+                    System.out.println("1: Añadir pais de origen");
+                    System.out.println("2: Omitir");
 
-            System.out.print("Respuesta: ");
-            int resp = sc.nextInt();
-            sc.nextLine();
+                    System.out.print("Respuesta: ");
+                    resp = sc.nextInt();
+                    sc.nextLine();
+
+                    respOk = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Debe ingresar un valor numérico.");
+                    sc.nextLine();
+                }
+            }
 
             if (resp == 1) {
                 String pais = "";
@@ -99,13 +111,23 @@ public class Catalogo {
                 }
             }
 
-            System.out.println("¿Desea añadir la fecha de vencimiento?");
-            System.out.println("1: Si");
-            System.out.println("2: Omitir");
+            int resp = 0;
+            boolean respOk = false;
+            while (!respOk) {
+                try {
+                    System.out.println("¿Desea añadir la fecha de vencimiento?");
+                    System.out.println("1: Si");
+                    System.out.println("2: Omitir");
 
-            System.out.print("Respuesta: ");
-            int resp = sc.nextInt();
-            sc.nextLine();
+                    System.out.print("Respuesta: ");
+                    resp = sc.nextInt();
+                    sc.nextLine();
+                    respOk = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Debe ingresar un valor numérico.");
+                    sc.nextLine();
+                }
+            }
 
             if (resp == 1) {
                 String vencimiento = "";
@@ -131,14 +153,12 @@ public class Catalogo {
 
             } else if (resp == 2) {
                 finWhile = true;
-
                  try {
                      Alimento alimento = new Alimento(nombre,precio,stock,peso);
                      agregarProductoAlCatalogo(alimento);
                  } catch (PrecioInvalidoException | StockInvalidoException | CadenaInvalidaException e) {
                      System.out.println("No se puedo agregar el producto." + e.getMessage());
                  }
-
             } else {
                 System.out.println("Ingrese una opción válida.");
             }
@@ -147,7 +167,6 @@ public class Catalogo {
     }
 
     public void agregarProducto() {
-
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Cantidad actual de productos en el catálogo: " + Producto.getContadorProductos());
@@ -179,10 +198,14 @@ public class Catalogo {
                 System.out.print("-> Precio: ");
                 precio = sc.nextDouble();
                 sc.nextLine();
+
                 Utils.validarPrecio(precio);
                 precioValido = true;
             } catch (PrecioInvalidoException e) {
                 System.out.println("Precio inválido: " + e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("Debe ingresar un valor numérico.");
+                sc.nextLine();
             }
         }
 
@@ -192,17 +215,20 @@ public class Catalogo {
             try {
                 System.out.print("-> Stock inicial: ");
                 stock = sc.nextInt();
-                Utils.validarStock(stock);
                 sc.nextLine();
+
+                Utils.validarStock(stock);
                 stockOk = true;
             } catch (StockInvalidoException e) {
                 System.out.println("Stock inválido: " + e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("Debe ingresar un valor numérico.");
+                sc.nextLine();
             }
         }
 
         // Desde este punto los campos son especificos del tipo de producto
         boolean finWhile = false;
-
         while (!finWhile) {
             System.out.println("Categorías disponibles: ");
             System.out.println("----------------------  ");
@@ -211,9 +237,19 @@ public class Catalogo {
                 System.out.println("Cat: " + (i + 1) + " -> " + categorias[i]);
             }
 
-            System.out.print("Ingrese numero de categoria del producto: ");
-            int tipoCategoria = sc.nextInt();
-            sc.nextLine();
+            int tipoCategoria = 0;
+            boolean respOk = false;
+            while (!respOk) {
+                try {
+                    System.out.print("Ingrese numero de categoria del producto: ");
+                    tipoCategoria = sc.nextInt();
+                    sc.nextLine();
+                    respOk = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Debe ingresar un valor numérico.");
+                    sc.nextLine();
+                }
+            }
 
             if ((tipoCategoria >= 1) && (tipoCategoria <= categorias.length)) {
 
@@ -279,20 +315,41 @@ public class Catalogo {
     public void eliminarProductoDelCatalogo() {
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Ingrese el ID de producto a eliminar: ");
-        int idProducto = sc.nextInt();
-        sc.nextLine();
+        int idProducto = 0;
+        boolean respOk = false;
+        while (!respOk) {
+            try {
+                System.out.print("Ingrese el ID de producto a eliminar: ");
+                idProducto = sc.nextInt();
+                sc.nextLine();
+                respOk = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Debe ingresar un valor numérico.");
+                sc.nextLine();
+            }
+        }
 
         Producto prodSelec = buscarProductoPorId(idProducto);
 
         if (prodSelec != null) {
-            System.out.println("Se eliminara el producto: " + prodSelec.getNombre());
-            System.out.println("1: Confirmar");
-            System.out.println("2: Cancelar operacion");
+            int resp = 0;
+            respOk = false;
+            while (!respOk) {
+                try {
+                    System.out.println("Se eliminara el producto: " + prodSelec.getNombre());
+                    System.out.println("1: Confirmar");
+                    System.out.println("2: Cancelar operacion");
 
-            System.out.print("Respuesta: ");
-            int resp = sc.nextInt();
-            sc.nextLine();
+                    System.out.print("Respuesta: ");
+                    resp = sc.nextInt();
+                    sc.nextLine();
+
+                    respOk = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Debe ingresar un valor numérico.");
+                    sc.nextLine();
+                }
+            }
 
             boolean finWhile = false;
             while (!finWhile) {

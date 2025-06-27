@@ -3,6 +3,7 @@ import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
 import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -31,22 +32,31 @@ public class Main {
 
         System.out.println("Comienza Programa");
         System.out.println("xxxxxxxxxxxxxxxxx");
-        int resp; // var generica global para ingresar int
+        int resp = 0; // var generica global para ingresar int
 
         while (!finWhilePrograma) {
-            System.out.println("Ingrese una opcion: ");
-            System.out.println("------------------- ");
-            System.out.println("1: Agregar producto");
-            System.out.println("2: Listar productos");
-            System.out.println("3: Buscar/Actualizar producto");
-            System.out.println("4: Eliminar producto");
-            System.out.println("5: Crear pedido");
-            System.out.println("6: Listar pedidos");
-            System.out.println("7: Salir");
+            boolean respOk = false;
+            while (!respOk) {
+                try {
+                    System.out.println("Ingrese una opcion: ");
+                    System.out.println("------------------- ");
+                    System.out.println("1: Agregar producto");
+                    System.out.println("2: Listar productos");
+                    System.out.println("3: Buscar/Actualizar producto");
+                    System.out.println("4: Eliminar producto");
+                    System.out.println("5: Crear pedido");
+                    System.out.println("6: Listar pedidos");
+                    System.out.println("7: Salir");
 
-            System.out.print("Respuesta: ");
-            resp = sc.nextInt();
-
+                    System.out.print("Respuesta: ");
+                    resp = sc.nextInt();
+                    sc.nextLine();
+                    respOk = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Debe ingresar un valor numérico.");
+                    sc.nextLine();
+                }
+            }
             switch (resp) {
                 // Agregar producto
                 case 1:
@@ -54,12 +64,21 @@ public class Main {
                     while (!finWhileProducto) {
                         catalogo.agregarProducto();
 
-                        System.out.println("1: Agregar otro producto");
-                        System.out.println("2: Volver al menu principal");
+                        respOk = false;
+                        while (!respOk) {
+                            try {
+                                System.out.println("1: Agregar otro producto");
+                                System.out.println("2: Volver al menu principal");
 
-                        System.out.print("Respuesta: ");
-                        resp = sc.nextInt();
-                        sc.nextLine();
+                                System.out.print("Respuesta: ");
+                                resp = sc.nextInt();
+                                sc.nextLine();
+                                respOk = true;
+                            } catch (InputMismatchException e) {
+                                System.out.println("Debe ingresar un valor numérico.");
+                                sc.nextLine();
+                            }
+                        }
 
                         if (resp == 2) {
                             finWhileProducto = true;
@@ -74,10 +93,19 @@ public class Main {
                     System.out.println("------------------");
                     System.out.println(catalogo.toString());
                     System.out.println("------------------");
-                    System.out.print("Ingrese cualquier tecla para continuar.");
 
-                    String fin = sc.nextLine();
-                    sc.nextLine();
+                    respOk = false;
+                    String fin = "";
+                    while (!respOk) {
+                        try {
+                            System.out.print("Ingrese cualquier tecla para continuar.");
+                            fin = sc.nextLine();
+                            Utils.validarCadena(fin);
+                            respOk = true;
+                        } catch (CadenaInvalidaException e) {
+                            System.out.println("No se registro ningún dato.");
+                        }
+                    }
                     break;
 
                 // Buscar producto y Actualizar datos
@@ -96,22 +124,43 @@ public class Main {
                         boolean finWhile = false;
 
                         while (!finWhile) {
-                            System.out.println("Ingrese una respuesta");
-                            System.out.println("1: Buscar por ID de producto");
-                            System.out.println("2: Buscar por palabras clave (Ej: Chocolate Blanco Felfort)");
-                            System.out.println("3: Salir al menú anterior");
+                            respOk = false;
+                            while (!respOk) {
+                                try {
+                                    System.out.println("Ingrese una respuesta");
+                                    System.out.println("1: Buscar por ID de producto");
+                                    System.out.println("2: Buscar por palabras clave (Ej: Chocolate Blanco Felfort)");
+                                    System.out.println("3: Salir al menú anterior");
 
-                            System.out.println();
+                                    System.out.println();
 
-                            System.out.print("Respuesta: ");
-                            resp = sc.nextInt();
-                            sc.nextLine();
+                                    System.out.print("Respuesta: ");
+                                    resp = sc.nextInt();
+                                    sc.nextLine();
+                                    respOk = true;
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Debe ingresar un valor numérico.");
+                                    sc.nextLine();
+                                }
+                            }
 
                             if (resp == 1) {
-                                System.out.print("ID de producto: ");
-                                int idProducto = sc.nextInt();
+                                Producto prodSelec = null;
+                                boolean idOk =false;
+                                int idProducto = 0;
+                                while (!idOk) {
+                                    try {
+                                        System.out.print("ID de producto: ");
+                                        idProducto = sc.nextInt();
+                                        sc.nextLine();
+                                        prodSelec = catalogo.buscarProductoPorId(idProducto);
 
-                                Producto prodSelec = catalogo.buscarProductoPorId(idProducto);
+                                        idOk = true;
+                                    } catch (InputMismatchException e) {
+                                        System.out.println("Debe ingresar un valor numérico.");
+                                        sc.nextLine();
+                                    }
+                                }
 
                                 if (prodSelec != null) {
                                     System.out.println("Seleccionaste el producto: " + prodSelec.getNombre());
@@ -123,11 +172,19 @@ public class Main {
                                 }
 
                             } else if (resp == 2) {
-                                System.out.print("Palabras clave: ");
-
-                                String palabras = Utils.formatearString(sc.nextLine());
-
-                                ArrayList<Producto> resultado = catalogo.buscarProductoPorNombre(palabras);
+                                ArrayList<Producto> resultado = null;
+                                boolean resultOk = false;
+                                while (!resultOk) {
+                                    try {
+                                        System.out.print("Palabras clave: ");
+                                        String palabras = Utils.formatearString(sc.nextLine());
+                                        Utils.validarCadena(palabras);
+                                        resultado = catalogo.buscarProductoPorNombre(palabras);
+                                        resultOk = true;
+                                    } catch (CadenaInvalidaException e) {
+                                        System.out.println("No se registro ningún dato.");
+                                    }
+                                }
 
                                 if (!resultado.isEmpty()) {
                                     System.out.println("Resultado de búsqueda:");
@@ -138,9 +195,19 @@ public class Main {
                                         posProd++;
                                     }
                                     System.out.println("---- ---- ---- ---- ----");
-                                    System.out.print("Ingrese el número de posición del producto a modificar o 0 'cero' para volver atrás: ");
-                                    resp = sc.nextInt();
-                                    sc.nextLine();
+
+                                    respOk = false;
+                                    while (!respOk) {
+                                        try {
+                                            System.out.print("Ingrese el número de posición del producto a modificar o 0 'cero' para volver atrás: ");
+                                            resp = sc.nextInt();
+                                            sc.nextLine();
+                                            respOk = true;
+
+                                        } catch (InputMismatchException e) {
+                                            System.out.println("Debe ingresar un valor numérico.");
+                                        }
+                                    }
 
                                     if ((resp >= 1) && (resp <= resultado.size())) {
                                         Producto prodSelec = resultado.get(resp - 1);
@@ -192,9 +259,18 @@ public class Main {
                     // Listar pedidos
                     System.out.println("Lista de prdidos");
                     System.out.println(gp.toString());
-                    System.out.print("Ingrese cualquier tecla para continuar.");
 
-                    fin = sc.nextLine();
+                    respOk = false;
+                    while (!respOk) {
+                        try {
+                            System.out.print("Ingrese cualquier tecla para continuar: ");
+                            fin = sc.nextLine();
+                            Utils.validarCadena(fin);
+                            respOk = true;
+                        } catch (CadenaInvalidaException e) {
+                            System.out.println("No se registro ningún dato.");
+                        }
+                    }
                     break;
 
                 case 7:

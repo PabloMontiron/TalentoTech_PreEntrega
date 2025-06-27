@@ -3,6 +3,7 @@ import com.techlab.pre_entrega.excepciones.CadenaInvalidaException;
 import com.techlab.pre_entrega.excepciones.PrecioInvalidoException;
 import com.techlab.pre_entrega.excepciones.StockInvalidoException;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public abstract class Producto {
@@ -121,6 +122,7 @@ public abstract class Producto {
                     try {
                         System.out.print("Ingrese nuevo precio: ");
                         double nuevoPrecio = sc.nextDouble();
+                        sc.nextLine();
 
                         producto.setPrecio(nuevoPrecio);
                         System.out.println("El precio del producto " + producto.getNombre() + ", se ha actualizado correctamente a : " + nuevoPrecio + " $ ");
@@ -128,6 +130,9 @@ public abstract class Producto {
                         precioOk = true;
                     } catch (PrecioInvalidoException e) {
                         System.out.println("Error al actualizr precio: " + e.getMessage());
+                    } catch (InputMismatchException e) {
+                        System.out.println("Debe ingresar un valor numérico.");
+                        sc.nextLine(); // limpio bufer si se ingresa String (no consume el primer salto de line)
                     }
                 }
 
@@ -144,19 +149,33 @@ public abstract class Producto {
                         System.out.print("Ingrese nuevo Stock: ");
                         nuevoStock = sc.nextInt();
                         sc.nextLine();
+
                         Utils.validarStock(nuevoStock);
                         stockOk = true;
                     } catch (StockInvalidoException e) {
                         System.out.println("El stock debe ser igual o mayor a 0.");
+                    } catch (InputMismatchException e) {
+                        System.out.println("Debe ingresar un valor numérico.");
+                        sc.nextLine();
                     }
                 }
 
-                System.out.println("El Stock pasará de: " + stockAux + ", a : " + nuevoStock);
-                System.out.println("1: Confirmar");
-                System.out.println("2: Cancelar operacion");
+                boolean respValida = false;
+                while (!respValida) {
+                    try {
+                        System.out.println("El Stock pasará de: " + stockAux + ", a : " + nuevoStock);
+                        System.out.println("1: Confirmar");
+                        System.out.println("2: Cancelar operacion");
 
-                System.out.print("Respuesta: ");
-                resp = sc.nextInt();
+
+                        System.out.print("Respuesta: ");
+                        resp = sc.nextInt();
+                        respValida = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Debe ingresar un valor numérico.");
+                        sc.nextLine();
+                    }
+                }
 
                 if (resp == 1) {
                     finWhile = true;

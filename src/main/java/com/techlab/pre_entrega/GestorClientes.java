@@ -1,5 +1,6 @@
 package com.techlab.pre_entrega;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 // -->EN DESARROLLO<--
@@ -29,16 +30,25 @@ public class GestorClientes {
     public Cliente obtenerCliente() {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Seleccione tipo de Cliente: ");
-        System.out.println("--------------------------- ");
-        System.out.println("1: Nuevo cliente");
-        System.out.println("2: Cliente existente");
-        System.out.println("3: Cancelar operacion");
+        boolean respOk = false;
+        int resp = 0;
+        while (!respOk) {
+            try {
+                System.out.println("Seleccione tipo de Cliente: ");
+                System.out.println("--------------------------- ");
+                System.out.println("1: Nuevo cliente");
+                System.out.println("2: Cliente existente");
+                System.out.println("3: Cancelar operacion");
 
-        System.out.print("Respuesta: ");
-        int resp = sc.nextInt();
-        sc.nextLine();
-
+                System.out.print("Respuesta: ");
+                resp = sc.nextInt();
+                sc.nextLine();
+                respOk = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Debe ingresar un valor numérico.");
+                sc.nextLine();
+            }
+        }
         if (resp == 1) {
             Cliente cliente = new Cliente();
             cliente.altaCliente();
@@ -47,29 +57,46 @@ public class GestorClientes {
             return cliente;
 
         } else if (resp == 2) {
-            boolean finWhile = false;
+            boolean finWhile = false; // si no se ingresa la op 2 volvera a entrar al while y pedir ID
             while (!finWhile) {
-                System.out.println("Ingrese ID de cliente: ");
-                System.out.print("Respuesta: ");
-                int idCliente = sc.nextInt();
-                sc.nextLine();
+                Cliente cliente = null;
+                respOk = false;
+                int idCliente = 0;
+                while (!respOk) {
+                    try {
+                        System.out.println("Ingrese ID de cliente: ");
+                        System.out.print("Respuesta: ");
+                        idCliente = sc.nextInt();
+                        sc.nextLine();
 
-                Cliente cliente = buscarClientePorId(idCliente); // ver met
-
+                        cliente = buscarClientePorId(idCliente);
+                        respOk = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Debe ingresar un valor numérico.");
+                        sc.nextLine();
+                    }
+                }
                 if (cliente == null) {
-                    System.out.println("No se encontro un cliente con ID: " + idCliente);
-                    System.out.println("Seleccione una opcion: ");
-                    System.out.println("1: Ingresar nuevamente ID");
-                    System.out.println("2: Cancelar Pedido");
+                    respOk = false;
+                    while (!respOk) {
+                        try {
+                            System.out.println("No se encontro un cliente con ID: " + idCliente);
+                            System.out.println("Seleccione una opcion: ");
+                            System.out.println("1: Ingresar nuevamente ID");
+                            System.out.println("2: Cancelar Pedido");
 
-                    System.out.print("Respuesta: ");
-                    resp = sc.nextInt();
-                    sc.nextLine(); //
-
+                            System.out.print("Respuesta: ");
+                            resp = sc.nextInt();
+                            sc.nextLine();
+                            respOk = true;
+                        } catch (InputMismatchException e) {
+                            System.out.println("Debe ingresar un valor numérico.");
+                            sc.nextLine();
+                        }
+                    }
                     if (resp == 2) {
                         System.out.println("Operación canecela.");
                         System.out.println("------------------ ");
-                        // aca cerarria el finwhile que no le veo mucho sentido
                         return null;
                     } else if (resp != 1) {
                         System.out.println("Ingrese una opción válida.");
@@ -87,9 +114,8 @@ public class GestorClientes {
             System.out.println("Ingrese una opción válida.");
         }
 
-        return null; // en si no deberia llegar a este return...sino lo pongo java lo marca como error.
+        return null;
     }
-
 
 }
 

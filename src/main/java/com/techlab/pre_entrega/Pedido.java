@@ -1,5 +1,6 @@
 package com.techlab.pre_entrega;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 // -->EN DESARROLLO<--
@@ -52,13 +53,21 @@ public class Pedido {
 
         boolean finWhilePedido = false;
         while (!finWhilePedido) {
-            System.out.println("Seleccione producto y cantidad. Se listarán las opciones que coincidan con la busqueda.");
-            System.out.println("---------------------------------------------------------------------------------------");
-            System.out.print("Nombre de producto: ");
-            String nomProd = Utils.formatearString(sc.nextLine());
+            ArrayList<Producto> resultado = null;
+            boolean nombreOk = false;
+            while (!nombreOk) {
+                try {
+                    System.out.println("Seleccione producto y cantidad. Se listarán las opciones que coincidan con la busqueda.");
+                    System.out.println("---------------------------------------------------------------------------------------");
+                    System.out.print("Nombre de producto: ");
+                    String nomProd = Utils.formatearString(sc.nextLine());
 
-            ArrayList<Producto> resultado = catalogo.buscarProductoPorNombre(nomProd);
-
+                    resultado = catalogo.buscarProductoPorNombre(nomProd);
+                    nombreOk = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Debe ingresar un valor numérico.");
+                }
+            }
             if (!resultado.isEmpty()) {
                 System.out.println("Resultado de busqueda");
                 System.out.println("---------------------");
@@ -80,12 +89,20 @@ public class Pedido {
 
                     boolean finWhile = false;
                     while (!finWhile) {
-                        System.out.println("Quiere agregar el producto al pedido?");
-                        System.out.println("1: Agregar");
-                        System.out.println("2: Volver atras");
-                        resp = sc.nextInt();
-                        sc.nextLine();
-
+                        boolean respOk = false;
+                        while (!respOk) {
+                            try {
+                                System.out.println("Quiere agregar el producto al pedido?");
+                                System.out.println("1: Agregar");
+                                System.out.println("2: Volver atras");
+                                resp = sc.nextInt();
+                                sc.nextLine();
+                                respOk = true;
+                            } catch (InputMismatchException e) {
+                                System.out.println("Debe ingresar un valor numérico.");
+                                sc.next();
+                            }
+                        }
                         if (resp == 1) {
                             agregarProductoAlPedido(prodSelec);
 
@@ -99,13 +116,20 @@ public class Pedido {
 
                     finWhile = false;
                     while (!finWhile) {
-                        System.out.println("Quiere agregar otro producto al pedido?");
+                        boolean respOk = false;
+                        while (!respOk) {
+                            try {
+                                System.out.println("Quiere agregar otro producto al pedido?");
 
-                        System.out.println("1: Agregar otro producto");
-                        System.out.println("2: Finalizar pedido");
-                        resp = sc.nextInt();
-                        sc.nextLine();
-
+                                System.out.println("1: Agregar otro producto");
+                                System.out.println("2: Finalizar pedido");
+                                resp = sc.nextInt();
+                                sc.nextLine();
+                                respOk = true;
+                            } catch (InputMismatchException e) {
+                                System.out.println("Debe ingresar un valor numérico.");
+                            }
+                        }
                         if (resp == 2) {
                             System.out.println("Pedido finalizado");
                             System.out.println("-----------------");
